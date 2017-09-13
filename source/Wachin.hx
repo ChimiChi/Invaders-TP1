@@ -11,7 +11,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 class Wachin extends FlxSprite 
 {
 
-	private var peew:Peew;
+	public var peew:Peew;
 	
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
@@ -41,11 +41,11 @@ class Wachin extends FlxSprite
 		
 		if (FlxG.keys.pressed.D)
 		{
-			x += 4 * FlxG.elapsed * FlxG.updateFramerate;
+			x += 2 * FlxG.elapsed * FlxG.updateFramerate;
 		}
 		if (FlxG.keys.pressed.A)
 		{
-			x -= 4 * FlxG.elapsed* FlxG.updateFramerate;
+			x -= 2 * FlxG.elapsed* FlxG.updateFramerate;
 		}
 			
 	}
