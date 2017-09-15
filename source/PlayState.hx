@@ -5,17 +5,19 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
-import haxe.Timer;
-import neko.Random;
+import flixel.math.FlxRandom;
 
 class PlayState extends FlxState
 {
-	
+	private var fonso:Fonso;
 	private var wachin:Wachin;
 	private var malitos:FlxTypedGroup<Malitos>;
-	private var shootTimer:Timer;
-	private var shootTime:Int;
-	private var randomNum:Random = new Random();
+	private var shootTime:Float;
+	private var timer:Float = 0;
+	private var randomNum:FlxRandom = new FlxRandom();
+	private var win:FlxText;
+	private var lose:FlxText;
+	private var timerFonso:Float = 0;
 	
 	override public function create():Void
 	{
@@ -23,7 +25,15 @@ class PlayState extends FlxState
 		
 		FlxG.cameras.bgColor = 0xff96ceb4;
 		wachin = new Wachin(FlxG.width / 2, FlxG.height, AssetPaths.wachin__png);
+		win = new FlxText(21, 30, 0, "YOU WIN", 20);
+		win.color = 0xff88d8b0;
+		win.kill();
+		lose = new FlxText(21, 30, 0, "YOU LOSE", 20);
+		lose.color = 0xffff6f69;
+		lose.kill();
 		malitos = new FlxTypedGroup<Malitos>();
+		fonso = new Fonso(0, 0, AssetPaths.fonso__png);
+		fonso.kill();
 		
 		for (i in 0...5)
 		{
@@ -39,19 +49,13 @@ class PlayState extends FlxState
 		
 		add(malitos);
 		add(wachin);
+		add(fonso);
+		add(win);
+		add(lose);
 		
 		
 		
-		shootTime = 500 + randomNum.int(1500);
-		shootTimer = new Timer(shootTime);
-		shootTimer.run = function ()
-		{
-			if (malitos.alive)
-			{
-				malitos.getRandom().shoot();
-			}
-			
-		};
+		shootTime = 0.5 + randomNum.float(1.5);
 		
 	}
 
@@ -59,26 +63,64 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		
+		timerFonso += elapsed;
+		if (timerFonso >= 8)
+		{
+			fonso.reset( -fonso.width, 2);
+			movementFoso();
+			timerFonso = 0;
+		}
+		
+		if (malitos.length > 0 && malitos.alive)
+		{
+			timer += elapsed;
+			if (timer >= shootTime)
+			{
+				var num:Int = randomNum.int(0, malitos.length-1);
+				malitos.members[num].shoot();
+				timer = 0;
+			}
+		}
+		else 
+		{
+			win.revive();
+			lose.kill();
+			FlxG.cameras.bgColor = 0xffffeead;
+		}
 		for (i in malitos)
 		{
 			if (FlxG.overlap(wachin.peew, i))
 			{
-				i.kill();
+				malitos.remove(i, true);
 				wachin.peew.kill();
-				
+						
 			}
 			
 			if (FlxG.overlap(i.bullet, wachin))
 			{
 				wachin.kill();
 				i.bullet.kill();
+				lose.revive();
+				win.kill();
+				FlxG.cameras.bgColor = 0xffffeead;
+				malitos.kill();
+				
 			}
 			
 			if (FlxG.overlap(i, wachin))
 			{
 				wachin.kill();
-				i.kill();
+				malitos.remove(i, true);
+				lose.revive();
+				win.kill();
+				FlxG.cameras.bgColor = 0xffffeead;
+				malitos.kill();
 			}
 		}
+	}
+	
+	public function movementFoso():Void
+	{
+		fonso.velocity.x = 30;
 	}
 }

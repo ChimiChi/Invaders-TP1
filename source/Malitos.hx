@@ -10,7 +10,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  */
 class Malitos extends FlxSprite 
 {
-	public var bullet:Peew;
+	public var bullet(get, null):Peew;
 	
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
@@ -30,11 +30,12 @@ class Malitos extends FlxSprite
 	
 	public function shoot():Void
 	{
-		if (alive)
-		{
-			bullet.reset(x + width / 2, y + height / 2);
-			bullet.velocity.y = 70;
-		}
-		
+		bullet.reset(x + width / 2, y + height / 2);
+		bullet.velocity.y = 70;		
+	}
+	
+	function get_bullet():Peew 
+	{
+		return bullet;
 	}
 }
