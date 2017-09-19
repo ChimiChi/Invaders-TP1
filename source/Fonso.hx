@@ -22,5 +22,10 @@ class Fonso extends FlxSprite
 		
 	}
 	
+	public function movementFonso():Void
+	{
+		velocity.x = 50;
+	}
+	
 
 }

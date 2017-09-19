@@ -38,22 +38,6 @@ class Malitos extends FlxSprite
 		y += 5;
 	}
 	
-	/*
-	public function patronMov():Void
-	{
-		if (x < originalX - 8)
-		{
-			x = originalX - 8;
-			velocity.x = -velocity.x;
-			velocity.y++;
-		}	
-		else if (x > originalX + 8)
-		{
-			x = originalX + 8;
-			velocity.x = -velocity.x;
-		}
-	}
-	*/
 	public function shoot():Void
 	{
 		bullet.reset(x + width / 2, y + height / 2);

@@ -24,6 +24,11 @@ class PlayState extends FlxState
 	private var lineaInf:Linea;
 	public var alto:Int = 3;
 	public var ancho:Int = 20;
+	private var score:FlxText;
+	private var highScore:FlxText;
+	private var timerReset:Float = 0;
+	private var arrayLives:FlxTypedGroup<FlxSprite>;
+	private var spriteLife:FlxSprite;
 	
 	override public function create():Void
 	{
@@ -37,13 +42,15 @@ class PlayState extends FlxState
 		malitos = new FlxTypedGroup<Malitos>();
 		win = new FlxText(21, 30, 0, "YOU WIN", 20);
 		win.color = 0xff88d8b0;
-		win.kill();
 		lose = new FlxText(21, 30, 0, "YOU LOSE", 20);
 		lose.color = 0xffff6f69;
-		lose.kill();
 		fonso = new Fonso(0, 0, AssetPaths.Ovni__png);
 		fonso.kill();
-		
+		score = new FlxText(FlxG.camera.width - 50, 1, 0, "SCORE 0", 6);
+		highScore = new FlxText(FlxG.camera.width / 2 - 40, 1, 0, "HIGH SCORE"+Global.highScore, 6);
+		Global.score = 0;
+		Global.lives = 3;
+		arrayLives = new FlxTypedGroup<FlxSprite>();
 		
 		// SHIELDS UP!!!
 		walls = new FlxTypedGroup<Shields>();
@@ -76,14 +83,22 @@ class PlayState extends FlxState
 			malitos.add(malito3);
 		}
 		
+		for ( i in 0...Global.lives)
+		{
+			spriteLife = new FlxSprite(0 + i * 10, 0, AssetPaths.Ship__png);
+			spriteLife.scale.x = 0.5;
+			spriteLife.scale.y = 0.5;
+			arrayLives.add(spriteLife);
+		}
+		
+		add(arrayLives);
 		add(lineaSup);
 		add(lineaInf);
 		add(malitos);
 		add(wachin);
 		add(fonso);
-		//add(win);
-		//add(lose);
-	
+		add(score);
+		add(highScore);
 		shootTime = 0.5 + randomNum.float(1.5);
 	}
 
@@ -94,17 +109,15 @@ class PlayState extends FlxState
 		patronMov();
 		colisiones();
 		
-		// increaseVel();
-		
-		
+
 		timerFonso += elapsed;
-		if (timerFonso >= 8)
+		if (timerFonso >= 15)
 		{
 			fonso.reset( -fonso.width, 12);
-			movementFonso();
+			fonso.movementFonso();
 			timerFonso = 0;
 		}
-		/*
+		trace(timerFonso);
 		if (malitos.length > 0 && malitos.alive)
 		{
 			timer += elapsed;
@@ -115,20 +128,29 @@ class PlayState extends FlxState
 				timer = 0;
 			}
 		}
-		/*else 
-		{
-			win.revive();
-			lose.kill();
+		else if(wachin.alive){
+			add(win);
 			FlxG.cameras.bgColor = 0xffffeead;
 		}
-		*/
+		if (Global.lives == 0)
+		{
+			wachin.kill();
+			add(lose);
+			malitos.kill();
+			timerReset += elapsed;
+			if (Global.score > Global.highScore)
+			{
+			Global.highScore = Global.score;
+			highScore.text = "HIGH SCORE " + Global.highScore;
+			}
+		}
+		score.text = "SCORE " + Global.score;
 		
-
-	}
-	
-	public function movementFonso():Void
-	{
-		fonso.velocity.x = 30;
+		if (timerReset >= 3)
+		{
+			timerReset = 0;
+			FlxG.switchState(new PlayState());
+		}
 	}
 	
 	public function patronMov():Void
@@ -143,8 +165,7 @@ class PlayState extends FlxState
 					i.velocity.x = -i.velocity.x;								
 				}
 			}
-			
-			if (i.x > FlxG.width - 10)
+			else if (i.x > FlxG.width - 10)
 			{
 				for (i in malitos)
 				{
@@ -157,43 +178,60 @@ class PlayState extends FlxState
 	
 	public function colisiones():Void
 	{
+		// WALLS
 		for (i in walls)
 		{
+			// WALLS VS BALA NAVE
 			if (FlxG.overlap(wachin.peew, i))
 			{
 				walls.remove(i, true);
 				wachin.peew.kill();
 			}
+			// WALLS VS BALA ENEMIGOS
+			for ( j in malitos)
+			{
+				if (FlxG.overlap(i, j.get_bullet()))
+				{
+					i.destroy();
+					j.get_bullet().kill();
+				}
+			}
 		}
-		
-		for (i in malitos)
-		{			
-			if (FlxG.overlap(wachin.peew, i))
+		// ENEMIGOS
+		for ( i in malitos)
+		{
+			// BALA NAVE CONTRA ENEMIGO
+			if (FlxG.overlap(i, wachin.peew))
 			{
+				i.destroy();
 				malitos.remove(i, true);
-				wachin.peew.kill();	
+				wachin.peew.kill();
+				Global.score += 5;
 			}
-			
-			if (FlxG.overlap(i.bullet, wachin))
+			// BALA ENEMIGO CONTRA NAVE
+			if (FlxG.overlap(i.get_bullet(), wachin))
 			{
-				wachin.kill();
-				i.bullet.kill();
-				lose.revive();
-				win.kill();
-				FlxG.cameras.bgColor = 0xffffeead;
-				malitos.kill();				
+				i.get_bullet().kill();
+				Global.lives --;
+				arrayLives.remove(arrayLives.getFirstAlive(), true);
 			}
-			
+			// CHOQUE MALO CONTRA NAVE
 			if (FlxG.overlap(i, wachin))
 			{
 				wachin.kill();
 				malitos.remove(i, true);
-				lose.revive();
-				win.kill();
 				FlxG.cameras.bgColor = 0xffffeead;
 				malitos.kill();
+				add(lose);
 			}
-		}		
+		}
+		//BALA CONTRA OVNI
+		if (FlxG.overlap(wachin.peew, fonso))
+		{
+			fonso.kill();
+			wachin.peew.kill();
+			Global.score += 20;
+		}
 	}
 	
 	public function increaseVel():Void
