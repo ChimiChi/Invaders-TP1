@@ -15,7 +15,7 @@ class Peew extends FlxSprite
 	{
 		super(X, Y);
 
-		loadGraphic(AssetPaths.peew__png);
+		makeGraphic(1, 2, 0xffffffff);
 		velocity.y = -70;
 		
 
@@ -25,7 +25,7 @@ class Peew extends FlxSprite
 	{
 		super.update(elapsed);
 
-		if (x < 0 || x > FlxG.width || y < 0 || y > FlxG.height)
+		if (y < 10 || y > FlxG.height - 10)
 		{
 			kill();
 		}

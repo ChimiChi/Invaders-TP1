@@ -39,11 +39,11 @@ class Wachin extends FlxSprite
 	
 	private function movement():Void{
 		
-		if (FlxG.keys.pressed.D)
+		if (FlxG.keys.pressed.D || FlxG.keys.pressed.RIGHT)
 		{
 			x += 2 * FlxG.elapsed * FlxG.updateFramerate;
 		}
-		if (FlxG.keys.pressed.A)
+		if (FlxG.keys.pressed.A || FlxG.keys.pressed.LEFT)
 		{
 			x -= 2 * FlxG.elapsed* FlxG.updateFramerate;
 		}
@@ -52,7 +52,7 @@ class Wachin extends FlxSprite
 	
 	private function checkboundaries():Void
 	{
-			if (x < 0)
+		if (x < 0)
 		{
 			x = 0;
 		}	
@@ -67,7 +67,7 @@ class Wachin extends FlxSprite
 		if (FlxG.keys.justPressed.UP && peew.alive == false)
 		{
 			peew.reset(x + width / 2, y + height / 2);
-			peew.velocity.y = -70;
+			peew.velocity.y = -100;
 		}
 		
 	}

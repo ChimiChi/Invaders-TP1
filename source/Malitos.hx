@@ -15,26 +15,52 @@ class Malitos extends FlxSprite
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
-	
-		velocity.y = 2;	
+		
+		x -= width / 2;
+		
+		velocity.x = 10;
+		velocity.y = 0;
 		
 		bullet = new Peew();
 		bullet.kill();
 		FlxG.state.add(bullet);
+		
 	}
 	
 	override public function update(elapsed:Float):Void 
 	{
-		super.update(elapsed);	
+		super.update(elapsed);
+		
 	}
 	
+	public function moveDown():Void
+	{
+		y += 5;
+	}
+	
+	/*
+	public function patronMov():Void
+	{
+		if (x < originalX - 8)
+		{
+			x = originalX - 8;
+			velocity.x = -velocity.x;
+			velocity.y++;
+		}	
+		else if (x > originalX + 8)
+		{
+			x = originalX + 8;
+			velocity.x = -velocity.x;
+		}
+	}
+	*/
 	public function shoot():Void
 	{
 		bullet.reset(x + width / 2, y + height / 2);
 		bullet.velocity.y = 70;		
 	}
 	
-	function get_bullet():Peew 
+	public function get_bullet():Peew 
 	{
 		return bullet;
 	}
