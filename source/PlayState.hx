@@ -212,6 +212,10 @@ class PlayState extends FlxState
 					i.destroy();
 					j.get_bullet().kill();
 				}
+				if (FlxG.overlap(i, j))
+				{
+					i.destroy();
+				}
 			}
 		}
 		// ENEMIGOS
@@ -250,6 +254,7 @@ class PlayState extends FlxState
 			wachin.peew.kill();
 			Global.score += 20;
 		}
+		
 	}
 	
 	public function increaseVel():Void
