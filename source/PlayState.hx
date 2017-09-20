@@ -41,9 +41,9 @@ class PlayState extends FlxState
 		wachin = new Wachin(FlxG.width / 2, FlxG.height - 10, AssetPaths.Ship__png);
 		malitos = new FlxTypedGroup<Malitos>();
 		win = new FlxText(21, 30, 0, "YOU WIN", 20);
-		win.color = 0xff88d8b0;
+		win.color = 0xff48d8ff;
 		lose = new FlxText(21, 30, 0, "YOU LOSE", 20);
-		lose.color = 0xffff6f69;
+		lose.color = 0xffb25700;
 		fonso = new Fonso(0, 0, AssetPaths.Ovni__png);
 		fonso.kill();
 		score = new FlxText(FlxG.camera.width - 50, 1, 0, "SCORE: ", 6);
@@ -130,7 +130,7 @@ class PlayState extends FlxState
 		}
 		else if(wachin.alive){
 			add(win);
-			FlxG.cameras.bgColor = 0xffffeead;
+			FlxG.cameras.bgColor = 0xffff942f;
 			timerReset += elapsed;
 			if (Global.score > Global.highScore)
 			{
@@ -140,6 +140,7 @@ class PlayState extends FlxState
 		}
 		if (Global.lives == 0)
 		{
+			FlxG.cameras.bgColor = 0xff1090b2;
 			wachin.kill();
 			add(lose);
 			malitos.kill();
@@ -226,8 +227,11 @@ class PlayState extends FlxState
 			{
 				wachin.kill();
 				malitos.remove(i, true);
-				FlxG.cameras.bgColor = 0xffffeead;
+				FlxG.cameras.bgColor = 0xff1090b2;
 				malitos.kill();
+				Global.lives --;
+				Global.lives --;
+				Global.lives --;
 				add(lose);
 			}
 		}
