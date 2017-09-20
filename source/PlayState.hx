@@ -45,8 +45,8 @@ class PlayState extends FlxState
 		win = new FlxText(21, 30, 0, "YOU WIN", 20);
 		win.color = 0xff48d8ff;
 		lose = new FlxText(21, 30, 0, "YOU LOSE", 20);
-		lose.color = 0xffff6f69;
-		fonso = new Fonso(0, 0, AssetPaths.Ovni__png);
+		lose.color = 0xffb25700;
+		fonso = new Fonso(0, 0, AssetPaths.UFO__png);
 		fonso.kill();
 		score = new FlxText(FlxG.camera.width - 50, 1, 0, "SCORE: ", 6);
 		highScore = new FlxText(FlxG.camera.width / 2 - 40, 1, 0, "HIGH SCORE "+Global.highScore, 6);
@@ -239,9 +239,7 @@ class PlayState extends FlxState
 				malitos.remove(i, true);
 				FlxG.cameras.bgColor = 0xff1090b2;
 				malitos.kill();
-				Global.lives --;
-				Global.lives --;
-				Global.lives --;
+				Global.lives = 0;
 				add(lose);
 			}
 		}
