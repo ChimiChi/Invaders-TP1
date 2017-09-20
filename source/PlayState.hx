@@ -46,8 +46,8 @@ class PlayState extends FlxState
 		lose.color = 0xffff6f69;
 		fonso = new Fonso(0, 0, AssetPaths.Ovni__png);
 		fonso.kill();
-		score = new FlxText(FlxG.camera.width - 50, 1, 0, "SCORE 0", 6);
-		highScore = new FlxText(FlxG.camera.width / 2 - 40, 1, 0, "HIGH SCORE"+Global.highScore, 6);
+		score = new FlxText(FlxG.camera.width - 50, 1, 0, "SCORE: ", 6);
+		highScore = new FlxText(FlxG.camera.width / 2 - 40, 1, 0, "HIGH SCORE "+Global.highScore, 6);
 		Global.score = 0;
 		Global.lives = 3;
 		arrayLives = new FlxTypedGroup<FlxSprite>();
@@ -117,7 +117,7 @@ class PlayState extends FlxState
 			fonso.movementFonso();
 			timerFonso = 0;
 		}
-		trace(timerFonso);
+		
 		if (malitos.length > 0 && malitos.alive)
 		{
 			timer += elapsed;
@@ -131,6 +131,12 @@ class PlayState extends FlxState
 		else if(wachin.alive){
 			add(win);
 			FlxG.cameras.bgColor = 0xffffeead;
+			timerReset += elapsed;
+			if (Global.score > Global.highScore)
+			{
+			Global.highScore = Global.score;
+			highScore.text = "HIGH SCORE: " + Global.highScore;
+			}
 		}
 		if (Global.lives == 0)
 		{
@@ -141,10 +147,10 @@ class PlayState extends FlxState
 			if (Global.score > Global.highScore)
 			{
 			Global.highScore = Global.score;
-			highScore.text = "HIGH SCORE " + Global.highScore;
+			highScore.text = "HIGH SCORE: " + Global.highScore;
 			}
 		}
-		score.text = "SCORE " + Global.score;
+		score.text = "SCORE: " + Global.score;
 		
 		if (timerReset >= 3)
 		{

@@ -14,7 +14,7 @@ class TitleScreen extends FlxState
 	override public function create():Void 
 	{
 		super.create();
-		title = new FlxText(FlxG.camera.width / 2 - 33, FlxG.camera.height / 2 - 10, 0, "FONSO", 15);
+		title = new FlxText(FlxG.camera.width / 2 - 80, FlxG.camera.height / 2 - 10, 0, "FONSO(las bolas)", 15);
 		add(title);
 	}
 	
