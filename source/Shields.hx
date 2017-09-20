@@ -14,7 +14,7 @@ class Shields extends FlxSprite
 	{
 		super(X, Y);		
 		
-		makeGraphic(1, 1, 0xffffffff);
+		makeGraphic(2, 2, 0xffffffff);
 	}
 	
 	override public function update(elapsed:Float):Void

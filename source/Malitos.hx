@@ -11,15 +11,15 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 class Malitos extends FlxSprite 
 {
 	public var bullet(get, null):Peew;
+	public var xVel:Int = 2;
+	public var timerVel:Float = 0;
+	public var alienSpeed:Float = 0.2;
 	
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
 		
 		x -= width / 2;
-		
-		velocity.x = 10;
-		velocity.y = 0;
 		
 		bullet = new Peew();
 		bullet.kill();
@@ -30,6 +30,15 @@ class Malitos extends FlxSprite
 	override public function update(elapsed:Float):Void 
 	{
 		super.update(elapsed);
+		
+		timerVel += elapsed;
+		
+		if (timerVel >= alienSpeed)
+		{
+			x += xVel;
+			timerVel = 0;
+		}
+		
 		
 	}
 	

@@ -22,19 +22,21 @@ class PlayState extends FlxState
 	private var timerFonso:Float = 0;
 	private var lineaSup:Linea;
 	private var lineaInf:Linea;
-	public var alto:Int = 3;
-	public var ancho:Int = 20;
+	public var alto:Int = 2;
+	public var ancho:Int = 10;
 	private var score:FlxText;
 	private var highScore:FlxText;
 	private var timerReset:Float = 0;
 	private var arrayLives:FlxTypedGroup<FlxSprite>;
 	private var spriteLife:FlxSprite;
+	private var xVel:Int = 2;
+	private var timerVel:Float = 0;
 	
 	override public function create():Void
 	{
 		super.create();
 		
-		FlxG.cameras.bgColor = 0xffa0a0a0;
+		FlxG.cameras.bgColor = 0xff48d8ff;
 		lineaInf = new Linea(0, FlxG.height - 10);
 		lineaSup = new Linea(0, 10);
 		
@@ -43,7 +45,7 @@ class PlayState extends FlxState
 		win = new FlxText(21, 30, 0, "YOU WIN", 20);
 		win.color = 0xff48d8ff;
 		lose = new FlxText(21, 30, 0, "YOU LOSE", 20);
-		lose.color = 0xffb25700;
+		lose.color = 0xffff6f69;
 		fonso = new Fonso(0, 0, AssetPaths.Ovni__png);
 		fonso.kill();
 		score = new FlxText(FlxG.camera.width - 50, 1, 0, "SCORE: ", 6);
@@ -55,31 +57,35 @@ class PlayState extends FlxState
 		// SHIELDS UP!!!
 		walls = new FlxTypedGroup<Shields>();
 		
+		var anchoCubo:Int = 0;
+		var altoCubo:Int = 0;
 		for (i in 0...alto)
 		{
 			for (j in 0...ancho)
 			{
-				var cubitos1:Shields = new Shields((((FlxG.width / 2) + j) - ancho / 2) - 48, (FlxG.height - 30 + i) - alto / 2);
+				var cubitos1:Shields = new Shields((((FlxG.width / 2) + j + anchoCubo) - ancho) - 48, (FlxG.height - 30 + i + altoCubo) - alto / 2); //-48 
 				walls.add(cubitos1);
 				
-				var cubitos2:Shields = new Shields(((FlxG.width / 2) + j) - ancho / 2, (FlxG.height - 30 + i) - alto / 2);
+				var cubitos2:Shields = new Shields((((FlxG.width / 2) + j + anchoCubo) - ancho), (FlxG.height - 30 + i + altoCubo) - alto / 2);
 				walls.add(cubitos2);
-				
-				var cubitos3:Shields = new Shields((((FlxG.width / 2) + j) - ancho / 2) + 48, (FlxG.height - 30 + i) - alto / 2);
+				anchoCubo += 1;				
+				var cubitos3:Shields = new Shields((((FlxG.width / 2) + j + anchoCubo) - ancho) + 48, (FlxG.height - 30 + i + altoCubo) - alto / 2); //+48
 				walls.add(cubitos3);				
 			}
+			altoCubo += 1;
+			anchoCubo = 0;
 		}
 		add(walls);
 		
 		for (i in 0...7)
 		{
-			var malito1:Malitos = new Malitos(10 + 20*i,35,AssetPaths.Alien__png);
+			var malito1:Malitos = new Malitos(10 + 20*i,35,AssetPaths.Alien_1__png);
 			malitos.add(malito1);
 			
-			var malito2:Malitos = new Malitos(10 + 20*i,25,AssetPaths.Alien1__png);
+			var malito2:Malitos = new Malitos(10 + 20*i,25,AssetPaths.Alien_2__png);
 			malitos.add(malito2);
 			
-			var malito3:Malitos = new Malitos(10 + 20*i,13,AssetPaths.Alien2__png);
+			var malito3:Malitos = new Malitos(10 + 20*i,13,AssetPaths.Alien_3__png);
 			malitos.add(malito3);
 		}
 		
@@ -106,9 +112,37 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		
-		patronMov();
 		colisiones();
+		increaseVel();
 		
+		timerVel += elapsed;
+		
+		if (timerVel >= 0.2)
+		{
+			for (i in malitos)		
+			{				
+				if (i.x < 0)
+				{	
+					for (i in malitos)
+					{
+						i.moveDown();
+						i.x += 2;
+						i.xVel = xVel;
+					}					
+				}
+				else if (i.x > FlxG.width - 10)
+				{				
+					for (i in malitos)
+					{
+						i.moveDown();
+						i.x -= 2;
+						i.xVel = -xVel;
+					}
+					
+				}
+			}
+			timerVel = 0;
+		}	
 
 		timerFonso += elapsed;
 		if (timerFonso >= 15)
@@ -117,7 +151,6 @@ class PlayState extends FlxState
 			fonso.movementFonso();
 			timerFonso = 0;
 		}
-		
 		if (malitos.length > 0 && malitos.alive)
 		{
 			timer += elapsed;
@@ -158,29 +191,6 @@ class PlayState extends FlxState
 			timerReset = 0;
 			FlxG.switchState(new PlayState());
 		}
-	}
-	
-	public function patronMov():Void
-	{
-		for (i in malitos)
-		{
-			if (i.x <= 0)
-			{	
-				for (i in malitos)
-				{
-					i.y += 0.25;
-					i.velocity.x = -i.velocity.x;								
-				}
-			}
-			else if (i.x > FlxG.width - 10)
-			{
-				for (i in malitos)
-				{
-					i.velocity.x = -i.velocity.x;
-					i.moveDown();
-				}
-			}
-		}		
 	}
 	
 	public function colisiones():Void
@@ -250,10 +260,10 @@ class PlayState extends FlxState
 		{
 			switch (malitos.length)
 			{
-				case 10: i.velocity.x = 20;
-				case 5: i.velocity.x = 30;
-				case 1: i.velocity.x = 40;
-				default: i.velocity.x = i.velocity.x;
+				case 10: i.alienSpeed = 0.1;
+				case 5: i.alienSpeed = 0.05;
+				case 1: i.alienSpeed = 0.01;
+				default: i.alienSpeed = i.alienSpeed;
 			}
 		}		
 	}
