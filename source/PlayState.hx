@@ -48,8 +48,8 @@ class PlayState extends FlxState
 		lose.color = 0xffb25700;
 		fonso = new Fonso(0, 0, AssetPaths.UFO__png);
 		fonso.kill();
-		score = new FlxText(FlxG.camera.width - 50, 1, 0, "SCORE: ", 6);
-		highScore = new FlxText(FlxG.camera.width / 2 - 40, 1, 0, "HIGH SCORE "+Global.highScore, 6);
+		score = new FlxText(FlxG.camera.width - 50, -1, 0, "SCORE: ", 8);
+		highScore = new FlxText(FlxG.camera.width / 2 - 49, -1, 0, "HIGH SCORE "+Global.highScore, 8);
 		Global.score = 0;
 		Global.lives = 3;
 		arrayLives = new FlxTypedGroup<FlxSprite>();
@@ -91,7 +91,7 @@ class PlayState extends FlxState
 		
 		for ( i in 0...Global.lives)
 		{
-			spriteLife = new FlxSprite(0 + i * 10, 0, AssetPaths.Ship__png);
+			spriteLife = new FlxSprite(-2 + i * 10, 0, AssetPaths.Ship__png);
 			spriteLife.scale.x = 0.5;
 			spriteLife.scale.y = 0.5;
 			arrayLives.add(spriteLife);

@@ -19,9 +19,9 @@ private var timerCredits:Float = 0;
 	{
 		super.create();
 		FlxG.camera.bgColor = 0xff48d8ff;
-		name1 = new FlxText(FlxG.camera.width / 2 - 80, FlxG.camera.height / 2 - 50, 0, "Ana Belén Taborcías", 7);
-		name2 = new FlxText(FlxG.camera.width / 2 - 80, FlxG.camera.height / 2 - 30, 0, "Beto Castro", 7);
-		name3 = new FlxText(FlxG.camera.width / 2 - 80, FlxG.camera.height / 2 - 10, 0, "Enrique Alarcón", 7);
+		name1 = new FlxText(FlxG.camera.width / 2 - 80, FlxG.camera.height / 2 - 50, 0, "Ana Belén Taborcías", 8);
+		name2 = new FlxText(FlxG.camera.width / 2 - 80, FlxG.camera.height / 2 - 30, 0, "Beto Castro", 8);
+		name3 = new FlxText(FlxG.camera.width / 2 - 80, FlxG.camera.height / 2 - 10, 0, "Enrique Alarcón", 8);
 		name1.color = 0xffb25700;
 		name2.color = 0xffb25700;
 		name3.color = 0xffb25700;

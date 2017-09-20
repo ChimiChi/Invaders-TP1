@@ -21,8 +21,8 @@ class TitleScreen extends FlxState
 	{
 		super.create();
 		fondo = new FlxSprite(0, 0, AssetPaths.fonso__png);
-		title = new FlxText(0, 0, 0, "FONSO", 15);
-		invaders = new FlxText(75, 0, 0, "INVADERS", 14);
+		title = new FlxText(0, 0, 0, "FONSO", 16);
+		invaders = new FlxText(67, 0, 0, "INVADERS", 16);
 		enter = new FlxText(0, 50, 0, "Press Enter", 7);
 		cont = new FlxText(103, 50, 0, "To Continue", 7);
 		title.color = 0xffff942f;
